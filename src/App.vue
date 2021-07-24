@@ -1,8 +1,7 @@
 <template>
   <div id="app">
-    <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
     <Index/>
-  </div>
+  </div>  
 </template>
 
 <script>
@@ -16,18 +15,36 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
+import VueRouter from 'vue-router'
+Vue.use(VueRouter)
+
+const routes = [
+    { path: '', component: Index }
+]
+
+const router = new VueRouter({
+    routes
+});
+
 
 export default {
   name: 'App',
+  router,
   components: {
      Index
   },
   data () {
     return {
       options:['black', 'red', 'blue', 'green', 'purple', 'orange'],
-      selected : ''
+      selected : '',
+      componentKey:0
     }
   },
+  methods: {
+    forceRerender() {
+      this.componentKey += 1;  
+    }
+  }
   // created() {
   //   setTimeout(() => {
   //     this.selected = 'black';

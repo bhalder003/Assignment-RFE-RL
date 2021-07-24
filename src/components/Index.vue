@@ -5,20 +5,23 @@
       <div class="row mb-3">
         <label for="colFormLabel" class="col-sm-3 col-form-label">Add Color</label>
         <div class="col-sm-5">
-          <input type="email" class="form-control" id="colFormLabel" placeholder="color">
+          <input v-on:focus="clearError" v-model="color" class="form-control" id="colFormLabel" placeholder="color">
         </div>
         <div class="col-sm-3">
-          <button type="button" class="btn btn-primary">Add Color</button>
+            <button v-on:click="formatUrl" class="btn btn-primary">Add color</button>
         </div>
-</div>
+      </div>
+      <div  class="row" role="alert"> 
+        <div class="col-sm-9 col-form-label alert alert-light font-red"><span  v-show="error" >Sorry! Color {{color}} is already present in the list.</span></div>
+      </div>
     </div>
-    <div class="col-6 order-5 align-self-end">
+    
+    <div class="col-6">
       <b-list-group>
-        <div class="color_tabular rounded"
-          v-for="color in colorTag" :key="color">
-            <b-list-group-item v-bind:style="{ backgroundColor: color}">{{color}}</b-list-group-item>
+        <div class="color_tabular rounded" v-for="(color, index) in colorTag" :key="color">
+            <b-list-group-item :id="index" v-on:click="removeItem" v-bind:style="{ backgroundColor: color}">{{color}}</b-list-group-item>
         </div>
-    </b-list-group>
+      </b-list-group>
     </div>
   </div>
 </div> 
@@ -28,22 +31,77 @@
 export default {
   name: 'Index',
   props: {
-    msg: String,
+    error: Boolean,
     options: Array,
     selected: String,
-    colorTag: Array
+    colorTag: Array,
+    color: String
   },
   mounted() {
-    var tagString = (window.location.hash)
     try {
-      var tags = tagString.split('=')[1]
-      var tagArray = tags.split(',')
-      console.log(tagArray)
-      this.colorTag = tagArray
+      console.log(window.location.url)
+      this.colorTag = this.getColorsFromUrl(window.location.hash)
+      this.color=this.$route.query.color
     } catch (e) {
       console.error("error in parsging tag from url")
     }
-    console.log(tagString)
+  },
+  methods: {
+    getColorsFromUrl: function(tagString) {
+      try {
+        var tags = tagString.split('=')[1]
+        var tagArray = tags.split(',')
+        console.log(tagArray)
+        return tagArray
+      } catch (e) {
+        console.error("error in parsging tag from url")
+        return []
+      }
+    },
+    formatUrl: function() {
+      this.addColorToUrl(this.color)
+      const url = this.formUrl()
+      this.$router.push(url)
+      this.$forceUpdate()
+    },
+    addColorToUrl: function(color) {
+      if (this.colorTag !== null) {  
+        const colorIsPresent = this.colorTag.includes(color)
+        if (colorIsPresent) {
+          this.error = false
+        } else {
+          this.error = false 
+        }
+        if (color !== undefined) {
+          this.colorTag.push(color)
+        }
+      }
+    },
+    formUrl: function() {
+      if (this.colorTag === undefined || this.colorTag.length == 0){
+        return ''
+      } else {
+        const urlTag = this.colorTag.join(",")
+        return "#tags=" + urlTag
+      }
+    },
+    clearError: function() {
+      this.error = false
+    },
+    removeItem:function(event) {
+      const targetId = event.currentTarget.id;
+      var newColorTag = []
+      for (let i = 0; i < this.colorTag.length; i++) {
+        if(i != targetId) {
+          newColorTag.push(this.colorTag[i])
+        }
+      }
+      this.colorTag = newColorTag
+      console.log(newColorTag)
+      const url = this.formUrl()
+      this.$router.push(url)
+      this.$forceUpdate()
+    }
   }
 }
 </script>
@@ -62,8 +120,9 @@ export default {
   width: 50%;
 }
 
-.output {
-  width: 80%;
+.font-red {
+  color: red;
+  text-align: left;
+  margin-left: 20px;
 }
-
 </style>

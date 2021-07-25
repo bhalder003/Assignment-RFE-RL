@@ -7,9 +7,6 @@
 <script>
 import Vue from 'vue'
 import Index from './components/Index.vue'
-import vSelect from 'vue-select'
-Vue.component('v-select', vSelect)
-import 'vue-select/dist/vue-select.css'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
@@ -32,24 +29,7 @@ export default {
   router,
   components: {
      Index
-  },
-  data () {
-    return {
-      options:['black', 'red', 'blue', 'green', 'purple', 'orange'],
-      selected : '',
-      componentKey:0
-    }
-  },
-  methods: {
-    forceRerender() {
-      this.componentKey += 1;  
-    }
   }
-  // created() {
-  //   setTimeout(() => {
-  //     this.selected = 'black';
-  //   }, 1000);
-  // }
 }
 </script>
 

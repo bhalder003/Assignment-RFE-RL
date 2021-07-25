@@ -30,8 +30,13 @@ How to run the application ?
 I have used npm to build the project. Please follow the below steps to run the app.
 
 Unzip the file
+
 Open the terminal and go to the project directory
+
+Run "npm install"
+
 Run “npm run serve”
+
 Open a browser preferabbly google chrome and go to this url http://localhost:8080/#/#tags=red
 
 You can add multiple colours in URL by using comma(,) seperator like http://localhost:8080/#/#tags=red,green,blue
